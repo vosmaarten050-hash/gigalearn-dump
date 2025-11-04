@@ -1,0 +1,46 @@
+int rlbotmain() {
+    InferUnit* inferUnit = new InferUnit(
+        new AdvancedObs(), 109, // ObsBuilder and obs size
+        new DefaultAction(), // Action parser
+        // Shared head config
+        PartialModelConfig{
+            .layerSizes = { 256, 256 },
+            .activationType = ModelActivationType::LEAKY_RELU,
+            .optimType = ModelOptimType::ADAM,
+            .addLayerNorm = true,
+            .addOutputLayer = false
+        },
+        // Policy config
+        PartialModelConfig{
+            .layerSizes = { 1024, 512, 512, 512 },
+            .activationType = ModelActivationType::LEAKY_RELU,
+            .optimType = ModelOptimType::ADAM,
+            .addLayerNorm = true
+        },
+        std::filesystem::path("your path dummy"), // Folder containing model files to load
+        true // Use GPU,i don't think it's really important for inference but why not
+    );
+    RLBotParams params = {
+        .port = 65010,
+        .tickSkip = 8,
+        .actionDelay = 7,
+        .inferUnit = inferUnit
+    };
+    RLBotClient::Run(params);
+
+    return 0;
+}
+
+
+
+-----
+some additional shit
+-----
+int main(int argc, char* argv[]) {
+    bool useRlbot = false;
+    if (useRlbot) {
+        int outputrlbot = rlbotmain();
+    }
+    // Initialize RocketSim with collision meshes
+    // Change this path to point to your meshes!
+........
